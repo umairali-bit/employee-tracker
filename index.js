@@ -3,3 +3,8 @@
 //setu-up inquirer (choices) to present the prompts
 
 //setup switch statements each case in switch statment will be one of the choices. each case should have its own function. that function then will use a different query. each function needs to be individually defined. 
+
+
+const logo = require('asciiart-logo');
+const config = require('./package.json');
+console.log(logo(config).render());
