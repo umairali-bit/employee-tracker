@@ -28,23 +28,37 @@ function mainPrompts() {
         if (answers.choice === 'View All Employees') {
             viewAllEmployees();
         }
+        if (answers.choice === 'View All Departments') {
+            viewAllDepartment();
+        }
 
 
 
 });
 };
 function viewAllEmployees(){
-    const sql = `SELECT * FROM employees`;
+    const sql = `SELECT e.id,e.first_name, e.last_name, r.title, d.section, r.salary, CONCAT(m.first_name," ",m.last_name) AS manager 
+                FROM employee e INNER JOIN role r ON (e.id = r.id) INNER JOIN department d ON (r.department_id = d.id) INNER JOIN employee m
+                ON (e.manager_id = m.manager_id) ORDER by e.id;`;
     db.query(sql, (err, result) => {
-        if (err) {
-        res.status(400).json({ error: res.message });
-        }
+        if (err) throw err;
         console.table(result);
         mainPrompts();
         
     })
 };
 
+function viewAllDepartment(){
+    const sql = `SELECT * FROM department;`;
+
+    db.query(sql, (err, result) => {
+        if (err) throw err;
+        console.table(result);
+        mainPrompts();
+        
+    })
+
+}
 mainPrompts();
 
 
