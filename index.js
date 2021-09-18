@@ -31,12 +31,24 @@ function mainPrompts() {
         if (answers.choice === 'View All Departments') {
             viewAllDepartment();
         }
+        if (answers.choice === 'View All Roles') {
+            viewAllRoles();
+        }
+        if (answers.choice === 'View Employees by Manager') {
+            viewEmployeesByManager();
+        }
+        if (answers.choice === 'View Employees by Department') {
+            viewEmployeesByDepartment();
+        }
+        
 
 
 
 });
 };
-function viewAllEmployees(){
+
+// by using inner join
+function viewAllEmployees() {
     const sql = `SELECT e.id,e.first_name, e.last_name, r.title, d.section, r.salary, CONCAT(m.first_name," ",m.last_name) AS manager 
                 FROM employee e INNER JOIN role r ON (e.id = r.id) INNER JOIN department d ON (r.department_id = d.id) INNER JOIN employee m
                 ON (e.manager_id = m.manager_id) ORDER by e.id;`;
@@ -48,7 +60,7 @@ function viewAllEmployees(){
     })
 };
 
-function viewAllDepartment(){
+function viewAllDepartment() {
     const sql = `SELECT * FROM department;`;
 
     db.query(sql, (err, result) => {
@@ -59,6 +71,42 @@ function viewAllDepartment(){
     })
 
 }
+
+function viewAllRoles() {
+    const sql = `SELECT * From role;`;
+
+    db.query(sql, (err,result) => {
+        if (err) throw err;
+        console.table(result);
+        mainPrompts();
+    })
+}
+
+// using left join
+function viewEmployeesByManager() {
+    const sql = `SELECT employee.id,employee.first_name, employee.last_name, CONCAT(employeem.first_name,' ',employeem.last_name) AS manager 
+                FROM employee LEFT JOIN employee AS employeem on  employee.manager_id = employeem.id;`
+    
+    db.query(sql, (err,result) => {
+        if (err) throw err;
+        console.table(result);
+        mainPrompts();
+    })
+
+}
+
+function viewEmployeesByDepartment() {
+    const sql = `SELECT e.id,d.section AS department, e.first_name, e.last_name FROM department d RIGHT JOIN employee e ON e.role_id = d.id;`;
+
+    db.query(sql, (err,result) => {
+        if (err) throw err;
+        console.table(result);
+        mainPrompts();
+    })
+}
+
+
+
 mainPrompts();
 
 
