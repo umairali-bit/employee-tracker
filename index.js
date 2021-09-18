@@ -40,14 +40,37 @@ function mainPrompts() {
         if (answers.choice === 'View Employees by Department') {
             viewEmployeesByDepartment();
         }
-        
+        if (answers.choice === 'Add a Department') {
+            addDepartment();
+        }
+        if (answers.choice === 'Add a Role') {
+            addRole();
+        }
+        if (answers.choice === 'Add an Employee') {
+            addEmployee();
+        }
+        if (answers.choice === 'Update an Employee Role') {
+            updateEmployeeRole();
+        }
+        if (answers.choice === 'Update an Employee Manager') {
+            updateEmployeeManager();
+        }
+        if (answers.choice === 'Delete Employee') {
+            deleteEmployee();
+        }
+        if (answers.choice === 'Delete Role') {
+            deleteRole();
+        }
+        if (answers.choice === 'Delete Department') {
+            deleteDepartment();
+        }
 
 
 
 });
 };
 
-// by using inner join
+// using inner join
 function viewAllEmployees() {
     const sql = `SELECT e.id,e.first_name, e.last_name, r.title, d.section, r.salary, CONCAT(m.first_name," ",m.last_name) AS manager 
                 FROM employee e INNER JOIN role r ON (e.id = r.id) INNER JOIN department d ON (r.department_id = d.id) INNER JOIN employee m
@@ -95,6 +118,7 @@ function viewEmployeesByManager() {
 
 }
 
+// using right join
 function viewEmployeesByDepartment() {
     const sql = `SELECT e.id,d.section AS department, e.first_name, e.last_name FROM department d RIGHT JOIN employee e ON e.role_id = d.id;`;
 
