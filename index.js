@@ -157,6 +157,7 @@ function addEmployee() {
 
         db.query(sql, params,(err,result) => {
             if (err) throw err;
+            console.log("success")
             console.table(result);
         })
         db.query(`SELECT * FROM employee`, (err, result) => {
@@ -168,9 +169,72 @@ function addEmployee() {
         });
     });
 
+};
+
+
+function addDepartment() {
+    prompt([
+        {
+            name: 'section',
+            type: 'input',
+            message: 'Please Enter the name of the department'
+        },
+    ]).then (function (responses) {
+        const sql = `INSERT INTO department (section) VALUES (?);`;
+        const params = [responses.section];
+
+        db.query(sql, params,(err,result) => {
+            if (err) throw err;
+            console.table(result);
+        })
+        db.query(`SELECT * FROM department`, (err, result) => {
+            if (err) {
+                return;
+            }
+            console.table(result);
+            mainPrompts();
+        });
+    });
 
 };
 
+function addRole() {
+    prompt([
+        {
+            name: 'title',
+            type: 'input',
+            message: 'Please Enter the title of the Role'
+        },
+        {
+            name: 'salary',
+            type: 'input',
+            message: 'Please Enter the salary of the Role'
+        },
+        {
+            name: 'department_id',
+            type: 'number',
+            message: 'Please Enter the department ID of the role:'
+        },
+    
+    ]).then (function (response) {
+        const sql = `INSERT INTO role (title,salary,department_id) VALUES (?,?,?);`;
+        const params = [response.title, response.salary, response.department_id];
+
+        db.query(sql, params,(err,result) => {
+            if (err) throw err;
+            console.log("success")
+            console.table(result);
+        })
+        db.query(`SELECT * FROM role`, (err, result) => {
+            if (err) {
+                return;
+            }
+            console.table(result);
+            mainPrompts();
+        });
+    });
+
+};
 mainPrompts();
 
 
