@@ -1,8 +1,4 @@
-// THEN I am presented with the following options: view all departments, view all roles, view all employees, add a department, add a role, add an employee, and update an employee role
-
-//setu-up inquirer (choices) to present the prompts
-
-//setup switch statements each case in switch statment will be one of the choices. each case should have its own function. that function then will use a different query. each function needs to be individually defined. 
+// dependencies
 const db = require('./db/connection');
 const { prompt } = require("inquirer");
 const logo = require('asciiart-logo');
@@ -234,6 +230,145 @@ function addRole() {
         });
     });
 
+};
+
+function updateEmployeeRole() {
+    prompt([
+        {
+            name: 'first_name',
+            type: 'input',
+            message: 'Please Enter the First Name of the Employee You Want To Update'
+        },
+        {
+            name: 'last_name',
+            type: 'input',
+            message: 'Please Enter the Last Name of the Employee You Want To Update'
+        },
+        {
+            name: 'role_id',
+            type: 'number',
+            message: "Please Enter the Role ID Number For the Employee's New Role:"
+
+        }
+    ]).then(function (response) {
+        db.query("UPDATE employee SET role_id = ? WHERE first_name = ? AND last_name = ?", 
+                [response.role_id, response.first_name, response.last_name], 
+        function (err) {
+            if (err) throw err;
+            console.log("success");
+            db.query(`SELECT * FROM employee`, (err, result) => {
+                if (err) {
+                    return;
+                }
+                console.table(result);
+                mainPrompts()
+                ;
+            });
+        });
+    });
+};
+function updateEmployeeManager() {
+    prompt([
+        {
+            name: 'first_name',
+            type: 'input',
+            message: 'Please Enter the First Name of the Employee You Want To Update'
+        },
+        {
+            name: 'last_name',
+            type: 'input',
+            message: 'Please Enter the Last Name of the Employee You Want To Update'
+        },
+        {
+            name: 'manager_id',
+            type: 'number',
+            message: "Please Enter the ID Number of the Employee's New Manager:"
+
+        }
+    ]).then(function (response) {
+        db.query("UPDATE employee SET manager_id = ? WHERE first_name = ? AND last_name = ?", 
+        [response.manager_id, response.first_name, response.last_name], function (err) {
+            if (err) throw err;
+            console.log("success");
+
+            db.query(`SELECT * FROM employee`, (err, result) => {
+                if (err) {
+                    return;
+                }
+                console.table(result);
+                mainPrompts();
+            });
+        });
+    });
+};
+function deleteEmployee() {
+    prompt([
+        {
+            name: 'employee_id',
+            type: 'number',
+            message: 'Enter the ID Number of the Employee You Would Like to Delete:'
+        }
+    ]).then(function (response) {
+        db.query("DELETE FROM employee WHERE id = ?", [response.employee_id], function (err) {
+            if (err) throw err;
+            console.log("success");
+
+            db.query(`SELECT * FROM employee`, (err, result) => {
+                if (err) {
+                    return;
+                }
+                console.table(result);
+                mainPrompts();
+                
+            });
+        });
+    });
+};
+
+function deleteRole() {
+    prompt([
+        {
+            name: 'role_id',
+            type: 'number',
+            message: 'Enter the ID Number of the Job Role You Would Like to Delete:'
+        }
+    ]).then(function (response) {
+        db.query("DELETE FROM role WHERE id = ?", [response.role_id], function (err) {
+            if (err) throw err;
+            console.log("success");
+
+            db.query(`SELECT * FROM role`, (err, result) => {
+                if (err) {
+                    return;
+                }
+                console.table(result);
+                mainPrompts();
+            });
+        });
+    });
+};
+
+function deleteDepartment() {
+    prompt([
+        {
+            name: 'department_id',
+            type: 'number',
+            message: 'Enter the ID Number of the Department You Would Like to Delete:'
+        }
+    ]).then(function (response) {
+        db.query("DELETE FROM department WHERE id = ?", [response.department_id], function (err) {
+            if (err) throw err;
+            console.log("success");
+
+            db.query(`SELECT * FROM department`, (err, result) => {
+                if (err) {
+                    return;
+                }
+                console.table(result);
+                mainPrompts();
+            });
+        });
+    });
 };
 mainPrompts();
 
